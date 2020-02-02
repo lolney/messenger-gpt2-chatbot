@@ -1,0 +1,2 @@
+gpt-2-simple==0.7.1
+tensorflow==1.15.0

@@ -3,3 +3,11 @@
 /playground
 /gpt-2
 /generator/generator
+
+generator/checkpoint/
+
+generator/models/
+
+generator/data/
+
+notes\.md
