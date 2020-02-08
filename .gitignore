@@ -4,10 +4,16 @@
 /gpt-2
 /generator/generator
 
-generator/checkpoint/
+server/generator/checkpoint/
 
-generator/models/
+server/generator/models/
 
-generator/data/
+server/generator/data/
+
+server/server
 
 notes\.md
+
+server/generator/generator/
+
+server/generator/samples/
