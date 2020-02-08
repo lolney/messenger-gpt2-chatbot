@@ -4,8 +4,6 @@
 /gpt-2
 /generator/generator
 
-server/generator/checkpoint/
-
 server/generator/models/
 
 server/generator/data/
@@ -17,3 +15,27 @@ notes\.md
 server/generator/generator/
 
 server/generator/samples/
+
+server/generator/checkpoint/run1/model-322\.data-00000-of-00001
+
+server/generator/checkpoint/run1/model-322\.index
+
+server/generator/checkpoint/run1/model-322\.meta
+
+server/generator/checkpoint/run1/model-39\.data-00000-of-00001
+
+server/generator/checkpoint/run1/model-39\.index
+
+server/generator/checkpoint/run1/model-39\.meta
+
+server/generator/checkpoint/run1/model-6\.data-00000-of-00001
+
+server/generator/checkpoint/run1/model-6\.index
+
+server/generator/checkpoint/run1/model-6\.meta
+
+server/generator/checkpoint/run1/model-94\.data-00000-of-00001
+
+server/generator/checkpoint/run1/model-94\.index
+
+server/generator/checkpoint/run1/model-94\.meta
