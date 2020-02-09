@@ -1,4 +1,4 @@
-import server.generator.output_parser as output_parser
+import generator.output_parser as output_parser
 import textwrap
 import unittest
 
