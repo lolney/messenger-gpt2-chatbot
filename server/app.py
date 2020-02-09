@@ -17,7 +17,8 @@ if not access_token:
 
 # TODO: try making a global session:
 # https://stackoverflow.com/questions/56137254/python-flask-app-with-keras-tensorflow-backend-unable-to-load-model-at-run
-# session = session.load()
+#sess = session.load()
+sess = None
 
 
 @app.route('/webhook', methods=['GET'])
@@ -73,7 +74,15 @@ def handle_message(user_id, user_message):
     profile = request_profile(user_id)
     print('Received profile', profile)
     first_person = " ".join([profile["first_name"], profile["last_name"]])
-    return generator.perform(session, first_person=first_person, second_person="Luke Olney")
+
+    return generator.perform(
+        session=sess,
+        first_person=first_person,
+        second_person="Peter Olney",
+        text=user_message,
+        truncate=True,
+        length=50
+    )
 
 
 @app.route('/privacy', methods=['GET'])

@@ -11,33 +11,61 @@ checkpoint_dir = os.path.join(
     package_directory, 'checkpoint')
 
 
-def perform(session, **args):
-    return Generator(session, **args).generate()
+def perform(**args):
+    return Generator(**args).generate()
 
 
 class Generator:
 
-    def __init__(self, session, first_person=None, second_person=None, truncate=False):
-        self.session = sess.load()
+    def __init__(
+        self,
+        session=None,
+        first_person=None,
+        second_person=None,
+        truncate=False,
+        text="How are you?",
+        **rest
+    ):
+        self.session = session if session is not None else sess.load()
         self.first_person = first_person
         self.second_person = second_person
         self.truncate = truncate
+        self.text = text
+        self.other_args = rest
 
     def generate(self):
         prefix = self.make_prefix()
         generated_text = gpt2.generate(
-            self.session, checkpoint_dir=checkpoint_dir, prefix=prefix, return_as_list=True)
+            self.session,
+            checkpoint_dir=checkpoint_dir,
+            prefix=prefix,
+            return_as_list=True,
+            **self.other_args
+        )
         parsed_lines = output_parser.perform('\n'.join(generated_text))
+        print(parsed_lines)
 
         if not parsed_lines or len(parsed_lines) < len_history + 1:
             return None
 
-        # todo: include_prefix=true, truncate="<tag>\n\n"
         if self.truncate:
-            first, second = parsed_lines
-            return second
+            return self.truncate_output(parsed_lines)
 
         return parsed_lines[1:]
+
+    def truncate_output(self, parsed_lines):
+        if not parsed_lines or len(parsed_lines) == 0:
+            return None
+
+        if self.truncate:
+            output = []
+            parsed_lines.pop()
+            while len(parsed_lines) > 0:
+                line = parsed_lines.pop()
+                if line["person"] != self.second_person:
+                    break
+                output.append(line)
+            return output
 
     def make_prefix(self):
         first_tag = tag(self.first_person)
@@ -45,7 +73,7 @@ class Generator:
 
         return textwrap.dedent(f'''\
             {first_tag}
-            How are you?
+            {self.text}
             {first_tag}
 
             {second_tag}''')

@@ -30,14 +30,18 @@ class OutputParser:
             if person and not next_person:
                 lines.append(line)
             elif person and next_person:
-                return {"person": person, "text": "\n".join(lines)}
+                if next_person == person:
+                    return {"person": person, "text": "\n".join(lines)}
+                else:
+                    person = next_person
+                    lines = []
             elif not person and next_person:
                 person = next_person
 
         return None
 
     def match_person(self, line):
-        m = re.match(r"<|(.*)|>", line)
+        m = re.match(r"<\|(.*)\|>", line)
         if m:
             try:
                 return m.group(1)

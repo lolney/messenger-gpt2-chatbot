@@ -7,7 +7,7 @@ checkpoint_dir = os.path.join(
 
 
 def load():
-    sess = gpt2.start_tf_sess()
+    sess = gpt2.start_tf_sess(threads=8)
     gpt2.load_gpt2(sess, checkpoint_dir=checkpoint_dir)
     print('Finished loading')
     return sess
