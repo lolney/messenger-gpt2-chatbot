@@ -1,13 +1,12 @@
-FROM alpine
+FROM python:3.7.3-slim-stretch
 
-RUN apk update && \
-    apk add --no-cache python3 && \
-    mkdir /flask_app
+RUN apt-get -y update && apt-get -y install gcc
 
 ADD . /flask_app
 WORKDIR /flask_app
 RUN pip3 install -r requirements.txt
 
-EXPOSE 8000
+# Clean up APT when done.
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-CMD ["/usr/bin/gunicorn", "/flask_app/app:app"]
+ENTRYPOINT ["python3", "-X", "utf8", "app.py"]

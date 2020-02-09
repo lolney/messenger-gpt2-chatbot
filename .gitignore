@@ -39,3 +39,9 @@ server/generator/checkpoint/run1/model-94\.data-00000-of-00001
 server/generator/checkpoint/run1/model-94\.index
 
 server/generator/checkpoint/run1/model-94\.meta
+
+server/\.floydexpt
+
+server/\.floydignore
+
+server/floyd\.yml

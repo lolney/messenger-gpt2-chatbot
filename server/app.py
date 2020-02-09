@@ -3,6 +3,7 @@ import requests
 import json
 from generator import generator
 from generator import session
+from services import reply_sender, threaded_reply_sender
 import os
 app = Flask(__name__)
 
@@ -31,16 +32,7 @@ def webhook_verify():
 @app.route('/webhook', methods=['POST'])
 def webhook_action():
     data = json.loads(request.data.decode('utf-8'))
-    for entry in data['entry']:
-        user_message = entry['messaging'][0]['message']['text']
-        user_id = entry['messaging'][0]['sender']['id']
-        response = {
-            'recipient': {'id': user_id},
-            'message': {}
-        }
-        response['message']['text'] = handle_message(user_id, user_message)
-        requests.post(
-            'https://graph.facebook.com/v2.6/me/messages/?access_token=' + access_token, json=response)
+    threaded_reply_sender.perform(data, access_token)
     return Response(response="EVENT RECEIVED", status=200)
 
 
@@ -48,40 +40,12 @@ def webhook_action():
 def webhook_dev():
     # custom route for local development
     data = json.loads(request.data.decode('utf-8'))
-    user_message = data['entry'][0]['messaging'][0]['message']['text']
-    user_id = data['entry'][0]['messaging'][0]['sender']['id']
-    response = {
-        'recipient': {'id': user_id},
-        'message': {'text': handle_message(user_id, user_message)}
-    }
+    entry = data["entry"][0]
+    response = next(reply_sender.perform(entry, access_token))
     return Response(
         response=json.dumps(response),
         status=200,
         mimetype='application/json'
-    )
-
-
-def request_profile(user_id):
-    params = {'fields': 'first_name,last_name', 'access_token': access_token}
-    response = requests.get(
-        f'https://graph.facebook.com/v6.0/{user_id}', params=params)
-    if not response.ok:
-        raise Exception(response)
-    return response.json()
-
-
-def handle_message(user_id, user_message):
-    profile = request_profile(user_id)
-    print('Received profile', profile)
-    first_person = " ".join([profile["first_name"], profile["last_name"]])
-
-    return generator.perform(
-        session=sess,
-        first_person=first_person,
-        second_person="Peter Olney",
-        text=user_message,
-        truncate=True,
-        length=50
     )
 
 
