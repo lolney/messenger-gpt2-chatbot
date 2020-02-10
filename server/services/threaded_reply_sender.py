@@ -15,12 +15,17 @@ class ThreadedReplySender(Thread):
 
     def run(self):
         for entry in self.data["entry"]:
-            user_id = self.entry['messaging'][0]['sender']['id']
+            user_id = entry['messaging'][0]['sender']['id']
+
             self.send_typing(user_id)
             response = reply_sender.perform(entry, self.access_token)
             self.send_typing(user_id, on=False)
+
             requests.post(
-                'https://graph.facebook.com/v2.6/me/messages/?access_token=' + self.access_token, json=response)
+                'https://graph.facebook.com/v2.6/me/messages/?access_token=',
+                params=self.params(),
+                json=response
+            )
 
     def send_typing(self, user_id, on=True):
         url = "https://graph.facebook.com/v2.6/me/messages"
@@ -30,7 +35,9 @@ class ThreadedReplySender(Thread):
             },
             "sender_action": "typing_on" if on else "typing_off"
         }
-        params = {
+        requests.post(url, params=self.params(), json=json)
+
+    def params(self):
+        return {
             "access_token": self.access_token
         }
-        requests.post(url, params=params, json=json)
