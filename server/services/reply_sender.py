@@ -20,7 +20,7 @@ class ReplySender:
         }
         response['message']['text'] = self.handle_message(
             user_id, user_message)
-        yield response
+        return response
 
     def request_profile(self, user_id):
         params = {'fields': 'first_name,last_name',

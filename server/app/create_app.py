@@ -32,7 +32,7 @@ def create_app(env=default_env):
         # custom route for local development
         data = json.loads(request.data.decode('utf-8'))
         entry = data["entry"][0]
-        response = next(reply_sender.perform(entry, env["ACCESS_TOKEN"]))
+        response = reply_sender.perform(entry, env["ACCESS_TOKEN"])
         return Response(
             response=json.dumps(response),
             status=200,
