@@ -10,7 +10,6 @@ default_env = {
 
 def create_app(env=default_env):
     app = Flask(__name__)
-
     # TODO: try making a global session:
     # https://stackoverflow.com/questions/56137254/python-flask-app-with-keras-tensorflow-backend-unable-to-load-model-at-run
     #sess = session.load()

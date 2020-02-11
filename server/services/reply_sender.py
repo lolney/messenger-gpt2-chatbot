@@ -1,5 +1,7 @@
 import requests
 from generator import generator
+import logging
+log = logging.getLogger('app.create_app')
 
 
 def perform(*args):
@@ -16,6 +18,8 @@ class ReplySender:
         user_id = self.entry['messaging'][0]['sender']['id']
 
         messages = self.handle_message(user_id, user_message)
+        log.info(f'received {len(messages)} messages')
+
         for message in messages:
             yield {
                 'messaging_type': 'RESPONSE',
@@ -34,7 +38,7 @@ class ReplySender:
 
     def handle_message(self, user_id, user_message):
         profile = self.request_profile(user_id)
-        print('Received profile', profile)
+        log.info('received profile', profile)
         first_person = " ".join([profile["first_name"], profile["last_name"]])
 
         return generator.perform(
