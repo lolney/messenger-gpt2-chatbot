@@ -18,17 +18,21 @@ class ThreadedReplySender(Thread):
             user_id = entry['messaging'][0]['sender']['id']
 
             self.send_typing(user_id)
-            response = reply_sender.perform(entry, self.access_token)
+            messages = reply_sender.perform(entry, self.access_token)
             self.send_typing(user_id, on=False)
 
-            requests.post(
-                'https://graph.facebook.com/v2.6/me/messages/?access_token=',
-                params=self.params(),
-                json=response
-            )
+            for message in messages:
+                response = requests.post(
+                    'https://graph.facebook.com/v6.0/me/messages',
+                    params=self.params(),
+                    json=message
+                )
+
+                if not response.ok:
+                    raise Exception(response.json())
 
     def send_typing(self, user_id, on=True):
-        url = "https://graph.facebook.com/v2.6/me/messages"
+        url = "https://graph.facebook.com/v6.0/me/messages"
         json = {
             "recipient": {
                 "id": user_id

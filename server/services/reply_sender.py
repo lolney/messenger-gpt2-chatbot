@@ -14,13 +14,14 @@ class ReplySender:
     def run(self):
         user_message = self.entry['messaging'][0]['message']['text']
         user_id = self.entry['messaging'][0]['sender']['id']
-        response = {
-            'recipient': {'id': user_id},
-            'message': {}
-        }
-        response['message']['text'] = self.handle_message(
-            user_id, user_message)
-        return response
+
+        messages = self.handle_message(user_id, user_message)
+        for message in messages:
+            yield {
+                'messaging_type': 'RESPONSE',
+                'recipient': {'id': user_id},
+                'message': {'text': message["text"]}
+            }
 
     def request_profile(self, user_id):
         params = {'fields': 'first_name,last_name',
