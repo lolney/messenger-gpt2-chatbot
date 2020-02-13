@@ -17,9 +17,9 @@ class ThreadedReplySender(Thread):
         for entry in self.data["entry"]:
             user_id = entry['messaging'][0]['sender']['id']
 
-            self.send_typing(user_id)
+            self.typing(user_id)
             messages = reply_sender.perform(entry, self.access_token)
-            self.send_typing(user_id, on=False)
+            self.typing(user_id, on=False)
 
             for message in messages:
                 response = requests.post(
@@ -31,7 +31,7 @@ class ThreadedReplySender(Thread):
                 if not response.ok:
                     raise Exception(response.json())
 
-    def send_typing(self, user_id, on=True):
+    def typing(self, user_id, on=True):
         url = "https://graph.facebook.com/v6.0/me/messages"
         json = {
             "recipient": {

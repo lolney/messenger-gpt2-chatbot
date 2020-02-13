@@ -2,8 +2,12 @@ import generator.output_parser as output_parser
 import gpt_2_simple as gpt2
 import os
 import textwrap
+import resource
 import generator.session as sess
 from generator.utils.utils import tag
+from generator.utils.log_process_stats import log_process_stats
+import logging
+log = logging.getLogger('app.create_app')
 
 len_history = 1
 package_directory = os.path.dirname(os.path.abspath(__file__))
@@ -35,6 +39,7 @@ class Generator:
 
     def generate(self):
         prefix = self.make_prefix()
+        log_process_stats()
         generated_text = gpt2.generate(
             self.session,
             checkpoint_dir=checkpoint_dir,
@@ -42,8 +47,10 @@ class Generator:
             return_as_list=True,
             **self.other_args
         )
+        log_process_stats()
+        log.info(f"generated text: {generated_text}")
         parsed_lines = output_parser.perform('\n'.join(generated_text))
-        print(parsed_lines)
+        log.info(f"parsed lines: {parsed_lines}")
 
         if not parsed_lines or len(parsed_lines) < len_history + 1:
             return None

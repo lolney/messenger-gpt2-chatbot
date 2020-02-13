@@ -38,7 +38,7 @@ class ReplySender:
 
     def handle_message(self, user_id, user_message):
         profile = self.request_profile(user_id)
-        log.info('received profile', profile)
+        log.info(f'received profile {profile}')
         first_person = " ".join([profile["first_name"], profile["last_name"]])
 
         return generator.perform(
@@ -47,5 +47,5 @@ class ReplySender:
             second_person="Peter Olney",
             text=user_message,
             truncate=True,
-            length=100
+            length=150
         )
