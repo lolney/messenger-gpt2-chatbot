@@ -11,7 +11,7 @@ source server/bin/activate
 
 ## Running tests
 
-`(cd server && python -m unittest discover --pattern "\*\_test.py")`
+`(cd server && python -m pytest)`
 
 ## Generating the model
 

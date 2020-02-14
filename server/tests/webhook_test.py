@@ -9,7 +9,7 @@ class MockResponse:
     # mock json() method always returns a specific testing dictionary
     @staticmethod
     def json():
-        return {"first_name": "Luke", "last_name": "olney"}
+        return {"first_name": "Luke", "last_name": "Olney"}
 
 
 class TestWebhook(object):

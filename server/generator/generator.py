@@ -1,8 +1,9 @@
 import generator.output_parser as output_parser
 import gpt_2_simple as gpt2
 import os
+import gc
 import textwrap
-import resource
+import tensorflow
 import generator.session as sess
 from generator.utils.utils import tag
 from generator.utils.log_process_stats import log_process_stats
@@ -47,6 +48,7 @@ class Generator:
             return_as_list=True,
             **self.other_args
         )
+        self.cleanup()
         log_process_stats()
         log.info(f"generated text: {generated_text}")
         parsed_lines = output_parser.perform('\n'.join(generated_text))
@@ -84,3 +86,8 @@ class Generator:
             {first_tag}
 
             {second_tag}''')
+
+    def cleanup(self):
+        tensorflow.reset_default_graph()
+        self.session.close()
+        gc.collect()
