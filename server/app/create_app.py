@@ -1,5 +1,6 @@
 from flask import Flask, request, Response
 import json
+import time
 from services import reply_sender, threaded_reply_sender
 
 default_env = {
@@ -24,6 +25,9 @@ def create_app(env=default_env):
     def webhook_action():
         data = json.loads(request.data.decode('utf-8'))
         threaded_reply_sender.perform(data, env["ACCESS_TOKEN"])
+        # Need to return a response in 20s to avoid timeout
+        # But Cloud Run will throttle us if we return the response immediately
+        time.sleep(19)
         return Response(response="EVENT RECEIVED", status=200)
 
     @app.route('/webhook_dev', methods=['POST'])
