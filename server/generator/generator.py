@@ -58,7 +58,9 @@ class Generator:
             return None
 
         if self.truncate:
-            return self.truncate_output(parsed_lines)
+            return self.truncate_output(
+                parsed_lines[len_history:]
+            )
 
         return parsed_lines[1:]
 
@@ -66,15 +68,10 @@ class Generator:
         if not parsed_lines or len(parsed_lines) == 0:
             return None
 
-        if self.truncate:
-            output = []
-            parsed_lines.pop()
-            while len(parsed_lines) > 0:
-                line = parsed_lines.pop()
-                if line["person"] != self.second_person:
-                    break
-                output.append(line)
-            return output
+        return list(filter(
+            lambda line: line["person"] == self.second_person,
+            parsed_lines
+        ))
 
     def make_prefix(self):
         first_tag = tag(self.first_person)

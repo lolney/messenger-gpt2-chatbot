@@ -18,7 +18,10 @@ class ReplySender:
         user_id = self.entry['messaging'][0]['sender']['id']
 
         messages = self.handle_message(user_id, user_message)
-        log.info(f'received {len(messages)} messages')
+        log.info(f'received messages: {messages}')
+
+        if messages is None:
+            return
 
         for message in messages:
             yield {
