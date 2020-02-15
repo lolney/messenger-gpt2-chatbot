@@ -83,12 +83,44 @@ results3 = [
     }
 ]
 
+text4 = '''
+<|First Person|>
+Hey
+<|First Person|>
+
+<|Second Person|>
+http://kc.sfm.edu/newsroom/index.cfm?id=sfnewsroom
+<|Second Person|>
+
+<|Third Person|>
+http://kc.sfm.edu/newsroom/index.cfm?id=sfnewsroom
+<|Third Person|>
+
+<|First Person|>
+'''
+
+results4 = [
+    {
+        "person": "First Person",
+        "text": "Hey"
+    },
+    {
+        "person": "Second Person",
+        "text": "http://kc.sfm.edu/newsroom/index.cfm?id=sfnewsroom"
+    },
+    {
+        "person": "Third Person",
+        "text": "http://kc.sfm.edu/newsroom/index.cfm?id=sfnewsroom"
+    }
+]
+
 
 class TestOutputParser(unittest.TestCase):
 
     def test_parser(self):
         for msg, expected in zip(
-                [text1, text2, text3], [results1, results2, results3]
+                [text1, text2, text3, text4], [
+                    results1, results2, results3, results4]
         ):
             with self.subTest(msg[:10]):
                 result = output_parser.perform(msg)

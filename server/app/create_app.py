@@ -1,7 +1,7 @@
 from flask import Flask, request, Response
 import json
 import time
-from services import reply_sender, threaded_reply_sender
+from services import reply_sender, reply_generator, threaded_webhook_proxy
 
 default_env = {
     'VERIFY_TOKEN': None,
@@ -24,23 +24,26 @@ def create_app(env=default_env):
     @app.route('/webhook', methods=['POST'])
     def webhook_action():
         data = json.loads(request.data.decode('utf-8'))
-        threaded_reply_sender.perform(data, env["ACCESS_TOKEN"])
-        # Need to return a response in 20s to avoid timeout
-        # But Cloud Run will throttle us if we return the response immediately
-        time.sleep(19)
+        threaded_webhook_proxy.perform(data)
         return Response(response="EVENT RECEIVED", status=200)
 
-    @app.route('/webhook_dev', methods=['POST'])
-    def webhook_dev():
+    @app.route('/generate', methods=['POST'])
+    def generate():
         # custom route for local development
         data = json.loads(request.data.decode('utf-8'))
         entry = data["entry"][0]
-        response = next(reply_sender.perform(entry, env["ACCESS_TOKEN"]))
+        response = list(reply_generator.perform(entry, env["ACCESS_TOKEN"]))
         return Response(
             response=json.dumps(response),
             status=200,
             mimetype='application/json'
         )
+
+    @app.route('/send_reply', methods=['POST'])
+    def send_reply():
+        data = json.loads(request.data.decode('utf-8'))
+        reply_sender.perform(data, env["ACCESS_TOKEN"])
+        return Response(response="REPLY SENT", status=200)
 
     @app.route('/privacy', methods=['GET'])
     def privacy():

@@ -67,7 +67,7 @@ cases = [
 
 
 class TestGenerator(object):
-    def test_webhook_dev(self, monkeypatch):
+    def test_generate(self, monkeypatch):
         for case in cases:
             text = [case['text']]
             params = case['params']

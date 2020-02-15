@@ -22,7 +22,7 @@ pip3 install httpie
 # osx
 brew install httpie
 
-http POST localhost:8000/webhook_dev entry:='[{"messaging":[{"message":{"text":"test sending bot message"},"sender":{"id":"1234"}}]}]'
+http POST localhost:8000/generate entry:='[{"messaging":[{"message":{"text":"test sending bot message"},"sender":{"id":"1234"}}]}]'
 ```
 
 [great official facebook tutorial](https://developers.facebook.com/docs/messenger-platform/getting-started/quick-start)
