@@ -3,10 +3,11 @@ messages-gpt2
 ## Setup
 
 ```sh
-git clone <...>
+git clone https://github.com/lolney/messenger-gpt2-chatbot.git
 cd server
 virtualenv -p python3.7 server
 source server/bin/activate
+pip install -r requirements.txt
 ```
 
 ## Running tests

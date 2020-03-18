@@ -1,11 +1,14 @@
 from flask import Flask, request, Response
 import json
-import time
-from services import reply_sender, reply_generator, threaded_webhook_proxy
+import requests
+from requests_futures.sessions import FuturesSession
+from urllib.parse import urljoin
+from services import reply_sender, reply_generator, webhook_proxy
 
 default_env = {
     'VERIFY_TOKEN': None,
-    'ACCESS_TOKEN': None
+    'ACCESS_TOKEN': None,
+    'URL': 'localhost:8080'
 }
 
 
@@ -23,9 +26,9 @@ def create_app(env=default_env):
 
     @app.route('/webhook', methods=['POST'])
     def webhook_action():
-        data = json.loads(request.data.decode('utf-8'))
-        threaded_webhook_proxy.perform(data)
-        return Response(response="EVENT RECEIVED", status=200)
+        url = urljoin(env["URL"], 'send_reply_proxy')
+        FuturesSession().post(url, data=request.data)
+        return Response(response=request.data, status=200)
 
     @app.route('/generate', methods=['POST'])
     def generate():
@@ -37,6 +40,14 @@ def create_app(env=default_env):
             response=json.dumps(response),
             status=200,
             mimetype='application/json'
+        )
+
+    @app.route('/send_reply_proxy', methods=['POST'])
+    def send_reply_proxy():
+        # custom route for local development
+        webhook_proxy.perform(request.data)
+        return Response(
+            status=200
         )
 
     @app.route('/send_reply', methods=['POST'])

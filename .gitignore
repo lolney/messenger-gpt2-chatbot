@@ -45,3 +45,5 @@ server/\.floydexpt
 server/\.floydignore
 
 server/floyd\.yml
+
+.DS_Store

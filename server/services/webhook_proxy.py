@@ -1,4 +1,3 @@
-from threading import Thread
 import requests
 import os
 from urllib.parse import urljoin
@@ -10,19 +9,18 @@ backoff = 5
 
 
 def perform(*args):
-    return ThreadedWebhookProxy(*args).start()
+    return WebhookProxy(*args).run()
 
 
-class ThreadedWebhookProxy(Thread):
+class WebhookProxy():
     def __init__(self, data):
-        Thread.__init__(self)
         self.data = data
 
     def run(self):
         for attempt in range(0, backoff):
             log.info(f'Starting attempt {attempt} for data {self.data}')
             response = requests.post(
-                urljoin(url, 'generate'), json=self.data
+                urljoin(url, 'generate'), data=self.data
             )
             if response.ok:
                 break
