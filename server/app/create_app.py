@@ -26,13 +26,14 @@ def create_app(env=default_env):
 
     @app.route('/webhook', methods=['POST'])
     def webhook_action():
+        # step 1
         url = urljoin(env["URL"], 'send_reply_proxy')
         FuturesSession().post(url, data=request.data)
         return Response(response=request.data, status=200)
 
     @app.route('/generate', methods=['POST'])
     def generate():
-        # custom route for local development
+        # call to generate directly, bypassing webhook process
         data = json.loads(request.data.decode('utf-8'))
         entry = data["entry"][0]
         response = list(reply_generator.perform(entry, env["ACCESS_TOKEN"]))
@@ -44,7 +45,7 @@ def create_app(env=default_env):
 
     @app.route('/send_reply_proxy', methods=['POST'])
     def send_reply_proxy():
-        # custom route for local development
+        # step 2
         webhook_proxy.perform(request.data)
         return Response(
             status=200
@@ -52,6 +53,7 @@ def create_app(env=default_env):
 
     @app.route('/send_reply', methods=['POST'])
     def send_reply():
+        # step 4
         data = json.loads(request.data.decode('utf-8'))
         reply_sender.perform(data, env["ACCESS_TOKEN"])
         return Response(response="REPLY SENT", status=200)

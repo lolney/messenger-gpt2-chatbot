@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 import logging
 log = logging.getLogger('app.create_app')
 
-url = os.getenv('MY_URL', 'localhost:8080')
+url = os.getenv('URL', 'http://localhost:8080')
 backoff = 5
 
 
@@ -20,7 +20,7 @@ class WebhookProxy():
         for attempt in range(0, backoff):
             log.info(f'Starting attempt {attempt} for data {self.data}')
             response = requests.post(
-                urljoin(url, 'generate'), data=self.data
+                urljoin(url, 'send_reply'), data=self.data
             )
             if response.ok:
                 break

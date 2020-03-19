@@ -30,6 +30,16 @@ class TestWebhook(object):
         response = client.post('/webhook', data=webhook_params)
         assert response.status_code == 200
 
+    def test_send_reply_proxy(self, client, webhook_params, monkeypatch):
+        def mock_get(*args, **kwargs):
+            return MockResponse()
+
+        monkeypatch.setattr(requests, "get", mock_get)
+        monkeypatch.setattr(requests, "post", mock_get)
+
+        response = client.post('/send_reply_proxy', data=webhook_params)
+        assert response.status_code == 200
+
     def test_send_reply(self, client, webhook_params, monkeypatch):
         def mock_get(*args, **kwargs):
             return MockResponse()
