@@ -1,12 +1,12 @@
-import generator.output_parser as output_parser
+from . import output_parser as output_parser
 import gpt_2_simple as gpt2
 import os
 import gc
 import textwrap
 import tensorflow
-import generator.session as sess
-from generator.utils.utils import tag
-from generator.utils.log_process_stats import log_process_stats
+from . import session as sess
+from .utils.utils import tag
+from .utils.log_process_stats import log_process_stats
 import logging
 log = logging.getLogger('app.create_app')
 

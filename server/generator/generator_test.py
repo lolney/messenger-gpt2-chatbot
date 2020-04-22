@@ -1,5 +1,5 @@
 import gpt_2_simple
-import generator.generator as generator
+from . import generator
 
 
 class MockSession:

@@ -1,9 +1,9 @@
-from services import reply_generator
+from . import reply_generator
 import requests
 
 
-def perform(*args):
-    return ReplySender(*args).run()
+def perform(data, access_token):
+    return ReplySender(data, access_token).run()
 
 
 class ReplySender():

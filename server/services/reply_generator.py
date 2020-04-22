@@ -4,8 +4,8 @@ import logging
 log = logging.getLogger('app.create_app')
 
 
-def perform(*args):
-    return ReplyGenerator(*args).run()
+def perform(entry, access_token):
+    return ReplyGenerator(entry, access_token).run()
 
 
 class ReplyGenerator:

@@ -1,3 +1,4 @@
+import pytest
 import requests
 
 
@@ -13,6 +14,7 @@ class MockResponse:
 
 
 class TestWebhook(object):
+    @pytest.mark.slow
     def test_generate(self, client, webhook_params, monkeypatch):
         def mock_get(*args, **kwargs):
             return MockResponse()
@@ -40,6 +42,7 @@ class TestWebhook(object):
         response = client.post('/send_reply_proxy', data=webhook_params)
         assert response.status_code == 200
 
+    @pytest.mark.slow
     def test_send_reply(self, client, webhook_params, monkeypatch):
         def mock_get(*args, **kwargs):
             return MockResponse()
