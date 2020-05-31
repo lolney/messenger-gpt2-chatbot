@@ -1,9 +1,12 @@
 from flask import Flask, request, Response
-import json
-import requests
 from requests_futures.sessions import FuturesSession
 from urllib.parse import urljoin
+import json
+import logging
+import requests
 from services import reply_sender, reply_generator, webhook_proxy
+
+log = logging.getLogger('app.create_app')
 
 default_env = {
     'VERIFY_TOKEN': None,
@@ -28,8 +31,9 @@ def create_app(env=default_env):
     def webhook_action():
         # step 1
         url = urljoin(env["URL"], 'send_reply_proxy')
+        log.info(f"webhook called with {request.data}")
         FuturesSession().post(url, data=request.data)
-        return Response(response=request.data, status=200)
+        return Response(status=200)
 
     @app.route('/generate', methods=['POST'])
     def generate():

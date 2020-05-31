@@ -23,5 +23,5 @@ class WebhookProxy():
                 urljoin(url, 'send_reply'), data=self.data
             )
             if response.ok:
-                break
+                return
         log.error(f'Failed {backoff} attempts for data {self.data}')
